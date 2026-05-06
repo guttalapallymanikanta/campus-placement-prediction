@@ -43,10 +43,10 @@ data/train.csv
 data/test.csv
 *.csv
 
-# Models
-models/
-*.pkl
-*.pickle
+# Models - allow pkl files to be committed for deployment
+# models/
+# *.pkl
+# *.pickle
 
 # Logs
 *.log

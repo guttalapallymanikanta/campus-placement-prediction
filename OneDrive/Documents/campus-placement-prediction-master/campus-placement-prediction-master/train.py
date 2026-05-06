@@ -4,6 +4,7 @@ Usage: python train.py
 """
 
 import sys
+import pandas as pd
 from pathlib import Path
 
 # Add src to path
@@ -31,7 +32,7 @@ def main():
     # Step 1: Load data
     print("\n[1/5] Loading data...")
     if not TRAIN_DATA_PATH.exists():
-        print(f"⚠️  Training data not found at {TRAIN_DATA_PATH}")
+        print(f"[WARNING] Training data not found at {TRAIN_DATA_PATH}")
         print("Please place your training data at this location:")
         print(f"    {TRAIN_DATA_PATH}")
         print("\nExpected columns: id, placed, [other features]")
@@ -75,12 +76,11 @@ def main():
     # Save best model
     best_model.save_model()
     
-    print("\n✅ Training pipeline completed!")
-    print(f"Next steps:")
-    print(f"  1. Review the Jupyter notebook for detailed analysis")
-    print(f"  2. Use predict.py to make predictions on new data")
+    print("\n[DONE] Training pipeline completed!")
+    print("Next steps:")
+    print("  1. Review the Jupyter notebook for detailed analysis")
+    print("  2. Use predict.py to make predictions on new data")
 
 
 if __name__ == "__main__":
-    import pandas as pd
     main()
