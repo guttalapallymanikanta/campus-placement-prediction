@@ -1,0 +1,83 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.app-header h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.app-header p {
+  font-size: 16px;
+  opacity: 0.9;
+  margin-bottom: 15px;
+}
+
+.api-status {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.api-status.healthy {
+  background: rgba(76, 175, 80, 0.3);
+  color: #fff;
+  border: 1px solid rgba(76, 175, 80, 0.5);
+}
+
+.api-status.unhealthy {
+  background: rgba(244, 67, 54, 0.3);
+  color: #fff;
+  border: 1px solid rgba(244, 67, 54, 0.5);
+}
+
+.app-main {
+  flex: 1;
+  padding: 20px;
+}
+
+.error-banner {
+  background: #FF6B6B;
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 600px;
+  margin: 40px auto;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.app-footer {
+  background: #333;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.app-footer p {
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .app-header h1 {
+    font-size: 24px;
+  }
+
+  .app-header p {
+    font-size: 14px;
+  }
+}
