@@ -1,20 +1,48 @@
-* {
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
+
+:root {
+  --bg-primary:   #07070f;
+  --bg-secondary: #0e0e1c;
+  --bg-card:      rgba(255,255,255,0.04);
+  --bg-card-hover:rgba(255,255,255,0.08);
+
+  --accent-purple: #8b5cf6;
+  --accent-blue:   #60a5fa;
+  --accent-green:  #34d399;
+  --accent-pink:   #f472b6;
+
+  --text-primary:   #f1f0ff;
+  --text-secondary: rgba(241,240,255,0.6);
+  --text-muted:     rgba(241,240,255,0.35);
+
+  --border: rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.18);
+
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  20px;
+  --radius-xl:  28px;
+
+  --shadow-glow-purple: 0 0 30px rgba(139,92,246,0.25);
+  --shadow-glow-blue:   0 0 30px rgba(96,165,250,0.25);
+}
+
+html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Inter', -apple-system, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   min-height: 100vh;
-  color: #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-}
-
-html, body, #root {
-  height: 100%;
-}
+button { font-family: inherit; }
+input, select, textarea { font-family: inherit; }

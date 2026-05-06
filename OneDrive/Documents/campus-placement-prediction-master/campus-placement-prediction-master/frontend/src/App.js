@@ -7,7 +7,7 @@ import { predictionAPI } from './api';
 function App() {
   const [predictions, setPredictions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [apiHealth, setApiHealth] = useState(null);
+  const [apiHealth, setApiHealth] = useState(null); // null = checking, object = result
 
   useEffect(() => {
     checkAPIHealth();
@@ -18,8 +18,7 @@ function App() {
     try {
       const response = await predictionAPI.getHealth();
       setApiHealth(response.data);
-    } catch (error) {
-      console.error('API health check failed:', error);
+    } catch {
       setApiHealth({ status: 'unhealthy' });
     }
   };
@@ -28,45 +27,79 @@ function App() {
     try {
       setLoading(true);
       const response = await predictionAPI.getPredictions();
-      setPredictions(response.data.results || []);
-    } catch (error) {
-      console.error('Error fetching predictions:', error);
+      setPredictions(response.data.results || response.data || []);
+    } catch {
+      // silently fail — predictions table will be empty
     } finally {
       setLoading(false);
     }
   };
 
   const handlePredictionSuccess = (newPrediction) => {
-    setPredictions([...predictions, newPrediction]);
+    setPredictions(prev => [newPrediction, ...prev]);
   };
 
-  return (
-    <div className="App">
-      <header className="app-header">
-        <h1>🎓 Campus Placement Prediction System</h1>
-        <p>Using Machine Learning to predict student placements</p>
-        {apiHealth && (
-          <div className={`api-status ${apiHealth.status}`}>
-            Backend Status: <strong>{apiHealth.status.toUpperCase()}</strong>
-          </div>
-        )}
-      </header>
+  /* ── status pill ── */
+  let statusClass = 'checking';
+  let statusText  = '● Connecting…';
+  if (apiHealth !== null) {
+    statusClass = apiHealth.status === 'healthy' ? 'healthy' : 'unhealthy';
+    statusText  = apiHealth.status === 'healthy' ? 'API Online' : 'API Offline';
+  }
 
-      <main className="app-main">
-        {apiHealth?.status === 'healthy' ? (
-          <>
-            <PredictionForm onPredictionSuccess={handlePredictionSuccess} />
-            {!loading && <ResultsDisplay predictions={predictions} />}
-          </>
-        ) : (
-          <div className="error-banner">
-            ⚠️ Backend server is not running! Start the Django server with: python manage.py runserver
+  const isReady = apiHealth?.status === 'healthy';
+
+  return (
+    <div className="app">
+      {/* ── Nav ── */}
+      <nav className="nav">
+        <div className="nav-brand">
+          <span className="nav-brand-icon">🎓</span>
+          PlacePredict AI
+        </div>
+        <div className={`nav-status ${statusClass}`}>
+          <div className="pulse-dot" />
+          {statusText}
+        </div>
+      </nav>
+
+      {/* ── Hero ── */}
+      <section className="hero">
+        <div className="hero-badge">🤖 Machine Learning Powered</div>
+        <h1>Campus Placement<br />Prediction System</h1>
+        <p className="hero-sub">
+          Enter your academic profile and let our ML model predict your
+          campus placement outcome with confidence scores.
+        </p>
+      </section>
+
+      {/* ── Main ── */}
+      <main className="main-content">
+        {!isReady && apiHealth !== null && (
+          <div className="offline-banner">
+            <span className="icon">⚠️</span>
+            <div>
+              <strong>Backend Offline</strong>
+              <p>
+                The Django API is unreachable. If running locally, start it with:{' '}
+                <code>python manage.py runserver</code>
+              </p>
+            </div>
           </div>
         )}
+
+        <div className="columns">
+          <PredictionForm
+            onPredictionSuccess={handlePredictionSuccess}
+            disabled={!isReady}
+          />
+          {!loading && <ResultsDisplay predictions={predictions} />}
+        </div>
       </main>
 
-      <footer className="app-footer">
-        <p>© 2024 Campus Placement Prediction System. Built with React + Django + Machine Learning.</p>
+      {/* ── Footer ── */}
+      <footer className="footer">
+        © {new Date().getFullYear()} PlacePredict AI &bull; Built with React + Django + Scikit-Learn &bull; Deployed on Render
       </footer>
     </div>
   );

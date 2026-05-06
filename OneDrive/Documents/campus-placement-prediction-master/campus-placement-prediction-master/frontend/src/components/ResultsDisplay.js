@@ -1,83 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import './ResultsDisplay.css';
+import React, { useMemo } from 'react';
 
 const ResultsDisplay = ({ predictions }) => {
-  const [stats, setStats] = useState(null);
-
-  useEffect(() => {
-    if (predictions && predictions.length > 0) {
-      const placed = predictions.filter(p => p.prediction === 1).length;
-      const total = predictions.length;
-      setStats({
-        total,
-        placed,
-        notPlaced: total - placed,
-        placementRate: ((placed / total) * 100).toFixed(2)
-      });
-    }
+  const stats = useMemo(() => {
+    if (!predictions || predictions.length === 0) return null;
+    const total = predictions.length;
+    const placed = predictions.filter(p => p.prediction === 1).length;
+    return {
+      total,
+      placed,
+      notPlaced: total - placed,
+      rate: ((placed / total) * 100).toFixed(1),
+    };
   }, [predictions]);
 
-  if (!predictions || predictions.length === 0) {
-    return (
-      <div className="results-display">
-        <p className="empty-state">No predictions yet. Submit the form to get started!</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="results-display">
-      <h2>Prediction Results</h2>
+    <div className="card">
+      <div className="card-title">📊 Prediction History</div>
+      <div className="card-subtitle">Results from the current session</div>
 
+      {/* Stats tiles */}
       {stats && (
-        <div className="stats-container">
-          <div className="stat-card">
-            <div className="stat-number">{stats.total}</div>
-            <div className="stat-label">Total Predictions</div>
+        <div className="stats-row">
+          <div className="stat-tile total">
+            <div className="num">{stats.total}</div>
+            <div className="lbl">Total</div>
           </div>
-          <div className="stat-card placed">
-            <div className="stat-number">{stats.placed}</div>
-            <div className="stat-label">Placed</div>
+          <div className="stat-tile placed">
+            <div className="num">{stats.placed}</div>
+            <div className="lbl">Placed</div>
           </div>
-          <div className="stat-card not-placed">
-            <div className="stat-number">{stats.notPlaced}</div>
-            <div className="stat-label">Not Placed</div>
+          <div className="stat-tile np">
+            <div className="num">{stats.notPlaced}</div>
+            <div className="lbl">Not Placed</div>
           </div>
-          <div className="stat-card rate">
-            <div className="stat-number">{stats.placementRate}%</div>
-            <div className="stat-label">Placement Rate</div>
+          <div className="stat-tile rate">
+            <div className="num">{stats.rate}%</div>
+            <div className="lbl">Success Rate</div>
           </div>
         </div>
       )}
 
-      <table className="results-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>CGPA</th>
-            <th>Prediction</th>
-            <th>Confidence</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {predictions.slice().reverse().map((pred, index) => (
-            <tr key={index} className={pred.prediction === 1 ? 'placed-row' : 'not-placed-row'}>
-              <td>{pred.name}</td>
-              <td>{pred.email}</td>
-              <td>{pred.cgpa}</td>
-              <td>
-                <span className={`badge ${pred.prediction === 1 ? 'badge-placed' : 'badge-not-placed'}`}>
-                  {pred.prediction === 1 ? 'PLACED' : 'NOT PLACED'}
-                </span>
-              </td>
-              <td>{(pred.confidence * 100).toFixed(2)}%</td>
-              <td>{new Date(pred.created_at).toLocaleDateString()}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Table */}
+      {!predictions || predictions.length === 0 ? (
+        <div className="empty-state">
+          <div className="icon">🔍</div>
+          <p>No predictions yet.<br />Submit the form to get started!</p>
+        </div>
+      ) : (
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>CGPA</th>
+                <th>Degree %</th>
+                <th>Result</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              {predictions.map((pred, i) => (
+                <tr key={pred.id || i}>
+                  <td style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{pred.name}</td>
+                  <td>{pred.cgpa}</td>
+                  <td>{pred.degree_percentage}%</td>
+                  <td>
+                    <span className={`badge ${pred.prediction === 1 ? 'badge-placed' : 'badge-np'}`}>
+                      {pred.prediction === 1 ? 'Placed' : 'Not Placed'}
+                    </span>
+                  </td>
+                  <td>{pred.confidence != null ? `${(pred.confidence * 100).toFixed(1)}%` : '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
