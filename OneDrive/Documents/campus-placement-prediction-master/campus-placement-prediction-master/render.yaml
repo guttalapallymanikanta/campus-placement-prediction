@@ -2,12 +2,12 @@ services:
   - type: web
     name: campus-placement-api
     env: python
-    buildCommand: cd backend && pip install -r requirements.txt && python manage.py collectstatic --no-input
-    startCommand: cd backend && python manage.py migrate --no-input && gunicorn placement_api.wsgi --bind 0.0.0.0:$PORT
+    buildCommand: cd "OneDrive/Documents/campus-placement-prediction-master/campus-placement-prediction-master/backend" && pip install -r requirements.txt && python manage.py collectstatic --no-input
+    startCommand: cd "OneDrive/Documents/campus-placement-prediction-master/campus-placement-prediction-master/backend" && python manage.py migrate --no-input && gunicorn placement_api.wsgi --bind 0.0.0.0:$PORT
     envVars:
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
         value: "False"
       - key: PYTHON_VERSION
-        value: "3.11.0"
+        value: "3.11.9"
