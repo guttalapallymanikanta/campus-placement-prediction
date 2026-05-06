@@ -1,1 +1,1 @@
-web: cd backend && python manage.py migrate --no-input && gunicorn placement_api.wsgi --bind 0.0.0.0:$PORT
+web: python manage.py migrate --no-input && gunicorn placement_api.wsgi --bind 0.0.0.0:$PORT
